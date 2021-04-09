@@ -1,54 +1,21 @@
-import Express from "express";
-import fs from "fs";
-import cors from "cors";
+import MongoClient from 'mongodb';
 
-const App = Express();
-const port = 3010;
-App.use(cors());
+const URL = "mongodb+srv://abarella:BVhcr9jQGhnOv2Ay@cluster0.oewwc.mongodb.net/";
 
-let fileContents = fs.readFileSync("database.json");
+MongoClient.connect(URL, {useUnifiedTopology: true})
+.then(connection => {
+    let database = connection.db("sample_airbnb");
 
-let database = JSON.parse(fileContents);
+    let collection = database.collection("listingsAndReviews");
 
-App.use('/', Express.static("client/build"));
+    let cursor = collection.find({review_score: {$gte: "2"}, beds: {$gte: 5}, price: {$lte: 200}});
 
-App.get("api/employees/name/:name", (req, res) => {
-    let result = {"error": "Not found"}; 
-
-    database.forEach((value) => {
-        if(req.params.name == value.name){
-            result = value;
-        }
-    });
-
-    res.json(result);
+    cursor.forEach(document => {
+        console.log(document.name);
+    }, () => {
+        connection.close();
+    })
 })
-
-App.get("/api/age/number/:number", (req, res) => {
-    let result = {"error": "Not found"}; 
-
-    database.forEach((value) => {
-        if(req.params.number == value.number){
-            result = value;
-        }
-    });
-
-    res.json(result);
-})
-
-App.post("api/employee/:name/:age", (req, res) => {
-    let result = {
-        "name": req.params.name,
-        "age": parseInt(req.params.age)
-    };
-
-    database.push(result);
-
-    fs.writeFileSync("database.json", JSON.stringify(database, null, '\t'));
-
-    res.json(result);
+.catch(error => {
+    console.log("Error: " + error);
 });
-
-App.listen(port, () => {
-    console.log("Server running!");
-})
