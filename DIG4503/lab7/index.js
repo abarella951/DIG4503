@@ -18,7 +18,7 @@ const names = [
     'Marcela'
 ];
 
-App.get('people/:person', (req, res) => {
+App.get('/people/:person', (req, res) => {
     let person = req.params.person;
     if (names.includes(person)){
         res.json({ Person: person});
