@@ -20,7 +20,7 @@ App.get("api/employees/name/:name", (req, res) => {
     res.json(result);
 })
 
-App.get("/api/ages/number/:number", (req, res) => {
+App.get("/api/employees/age/:number", (req, res) => {
     let result = {"error": "Not found"}; 
 
     database.forEach((value) => {
