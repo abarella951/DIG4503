@@ -23,19 +23,20 @@ App.get('/people/:person', (req, res) => {
     if (names.includes(person)){
         res.json({ Person: person});
     } else {
-        res.json({ Person: "Not available"});
+        res.json({ Person: "Not available" });
     }
 });
 
 App.get('/search/:person', (req, res) => {
     const result = names.filter(str => str.includes(req.params.person)); 
 
-    if(result !=0) {
+    if(result != 0) {
         res.json({ search: result});
     } else {
-        res.json({ search: "Not available"});
+        res.json({ search: "Not available" });
     }
 })
+
 App.listen(port, () => {
 
 });
